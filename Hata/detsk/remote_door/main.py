@@ -1,7 +1,6 @@
 import network
 import espnow
 import time
-import uasyncio as para
 
 def get_espnow_mac():
     wlan = network.WLAN(network.STA_IF)
@@ -31,19 +30,23 @@ esp.add_peer(destination)
 def send_mess(msg, dest):
     for x in range(10):
         esp.send(dest, msg)
-        print(f"Sent: {msg} -> {peer_mac}")
+        print(f"Sent: {msg} -> {dest}")
         response = wait_for_response()
         if response == "confirmed":
-            break
-    print("confirmed on: ", x)
+            print("confirmed on: ", x)
+            return
+    print("timeout...(((")    
     
-def wait_for_response(esp, timeout_ms = 30):
-    start_time = time.ticks_ms()  # Текущее время в миллисекундах
+def wait_for_response(timeout_ms = 100):
+    start_time = time.ticks_ms()
     while time.ticks_diff(time.ticks_ms(), start_time) < timeout_ms:
-        if esp.any():  # Проверяем, есть ли входящее сообщение
-            peer, msg = esp.recv()  # Получаем сообщение
+        if esp.any():
+            peer, msg = esp.recv()
             print(f"Received: {msg.decode()} from {peer}")
-            return msg  # Возвращаем данные, если сообщение получено
-    return "timeout...("  # Возвращаем None, если сообщение не пришло
+            return msg
+    return "timeout"
+
+send_mess("aaaaa", destination)
 
 print("end....")
+
