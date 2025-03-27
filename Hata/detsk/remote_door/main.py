@@ -12,7 +12,7 @@ def get_espnow_mac():
     return mac_bytes
 #===================================================================
 
-print(get_espnow_mac())
+print("current MAC: ", get_espnow_mac())
 
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
@@ -28,12 +28,22 @@ destination = b'\xC0\x5D\x89\xB0\x9C\xB8'
 msg = "Hello from ESP_2"
 esp.add_peer(destination)
 
-while True:
-    esp.send(destination, msg)
-    #print(f"Отправлено: {msg} -> {peer_mac}")
+def send_mess(msg, dest):
+    for x in range(10):
+        esp.send(dest, msg)
+        print(f"Sent: {msg} -> {peer_mac}")
+        response = wait_for_response()
+        if response == "confirmed":
+            break
+    print("confirmed on: ", x)
+    
+def wait_for_response(esp, timeout_ms = 30):
+    start_time = time.ticks_ms()  # Текущее время в миллисекундах
+    while time.ticks_diff(time.ticks_ms(), start_time) < timeout_ms:
+        if esp.any():  # Проверяем, есть ли входящее сообщение
+            peer, msg = esp.recv()  # Получаем сообщение
+            print(f"Received: {msg.decode()} from {peer}")
+            return msg  # Возвращаем данные, если сообщение получено
+    return "timeout...("  # Возвращаем None, если сообщение не пришло
 
-    if esp.any():
-        peer, msg = esp.recv()
-        print(f"Received: {msg.decode()} from {peer}")
-
-    time.sleep(2)
+print("end....")
