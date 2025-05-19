@@ -1,6 +1,6 @@
 import network
 
-zal_stena = b'\xC0\x5D\x89\xB0\x9C\xB8'
+zal_wall = b'\xC0\x5D\x89\xB0\x9C\xB8'
 zal_light = b'\x34\x5F\x45\xAA\x48\xAC'
 
 def get_espnow_mac():
