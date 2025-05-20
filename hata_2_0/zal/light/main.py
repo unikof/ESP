@@ -18,9 +18,7 @@ pwm_led_2 = machine.PWM(machine.Pin(LED_2), freq=1000)
 pwm_led_2.duty(0)
 #pwm_led_3.duty(0)
 
-commands = ["floor_click", "floor_longpress", "telik_click", "telik_longpress", "divan_click", "divan_longpress"]
-
-lights = {
+LIGHT_STATUSES = {
   "floor": 0,
   "telik": 0,
   "divan": 0
@@ -28,17 +26,23 @@ lights = {
 #===================================================================
 print(f"{hyphens}     ZAL LIGHT   ")
 #===================================================================
-def control_dag(code):
-    if code in commands:
+def check_code(code):
+    if code in ["floor_click", "floor_longpress", "telik_click", "telik_longpress", "divan_click", "divan_longpress"]:
         response = f"response_{code}"
-        
-        #ligh control logic
-        
     else:
         response = f"unknown_command_{code}"
+    return response
+
+def control_dag(code):
+    
+    
+    
+    
+        
+    
    
         
-    return response
+    return check_code(code)
 #===================================================================
 #print("current MAC: ", addr.get_espnow_mac())
 print("standing up WLAN...")
@@ -60,8 +64,7 @@ while True:
         peer, msg = esp.recv()
         code = msg.decode()
         print(f"received <<<<=== {code}")
-        #response_code = control_dag(code)
-        response_code = f"response_{code}"
+        response_code = control_dag(code)
         sleep_ms(10)
         esp.send(destination, response_code)
         print(f"sent ===>>> {response_code}")
