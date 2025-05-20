@@ -1,17 +1,31 @@
 import network
 import espnow
-import time
+from time import sleep, sleep_ms, ticks_ms, ticks_diff
+from addr import zal_light
 
-def get_espnow_mac():
-    wlan = network.WLAN(network.STA_IF)
-    wlan.active(True)
-    mac = wlan.config('mac')
-    
-    mac_bytes = "b'" + "".join(f"\\x{b:02X}" for b in mac) + "'"
-    return mac_bytes
+hyphens = "=" * 40 + ">>>"
 #===================================================================
+print(f"{hyphens}     ZAL WALL   ")
+#===================================================================
+def send_mess(msg):
+    for x in range(5):
+        esp.send(zal_light, msg)
+        print(f"request ===>>> {msg}")
+        response = wait_for_response()
+        print(f"response <<<=== {response} >>{x}th try<<<")
+        if response != "TIME_OUT":
+            return
 
-print("current MAC: ", get_espnow_mac())
+def wait_for_response():
+    start_timing = ticks_ms()
+    while ticks_diff(ticks_ms(), start_timing) < 100: # 100ms timeout
+        if esp.any():
+            peer, msg = esp.recv()
+            return msg.decode()
+    return "TIME_OUT"
+#===================================================================
+#print("current MAC: ", addr.get_espnow_mac())
+print("standing up WLAN...")
 
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
@@ -19,34 +33,33 @@ wlan.active(True)
 esp = espnow.ESPNow()
 esp.active(True)
 
-destination = b'\xC0\x5D\x89\xB0\x9C\xB8'
+esp.add_peer(zal_light)
 
-#b'\x34\x5F\x45\xAA\x48\xAC'
-#b'\xC0\x5D\x89\xB0\x9C\xB8'
+print("listening butts...:")
+print(hyphens)
+   
+send_mess("aaaaa")
+sleep(1)
+send_mess("bbbb")
 
-msg = "Hello from ESP_2"
-esp.add_peer(destination)
+sleep(1)
+send_mess("zzz")
 
-def send_mess(msg, dest):
-    for x in range(10):
-        esp.send(dest, msg)
-        print(f"Sent: {msg} -> {dest}")
-        response = wait_for_response()
-        if response == "confirmed":
-            print("confirmed on: ", x)
-            return
-    print("timeout...(((")    
-    
-def wait_for_response(timeout_ms = 100):
-    start_time = time.ticks_ms()
-    while time.ticks_diff(time.ticks_ms(), start_time) < timeout_ms:
-        if esp.any():
-            peer, msg = esp.recv()
-            print(f"Received: {msg.decode()} from {peer}")
-            return msg
-    return "timeout"
+sleep(1)
+send_mess("fff")
 
-send_mess("aaaaa", destination)
+sleep(1)
+send_mess("ggg")
 
-print("end....")
+sleep(1)
+send_mess("hhh")
 
+sleep(1)
+send_mess("jjj")
+
+sleep(1)
+send_mess("kkk")
+
+print(hyphens)
+print("MAIN END...")
+print(hyphens)

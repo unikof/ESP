@@ -1,6 +1,9 @@
 import time
 
-print("boot started...")
+hyphens = "=" * 30 + ">>>"
+
+print(hyphens)
+print("...BOOT STARTED...")
 
 do_update = False
 
@@ -37,27 +40,29 @@ if(do_update):
             with open("main.py", "w") as f:
                 f.write(response.text)
             print("UPDATE SUCCESS.....")
+            print(hyphens)
         else:
             print("downloading failed, status:", response.status_code)
         response.close()
     except Exception as e:
         print("Error:", e)
+        print(hyphens)
     finally:
         gc.collect()
-        print("================================>>>>>")
+        print(hyphens)
         print("5 seconds pause...")
         time.sleep(5)
-        print("================================>>>>>")
+        print(hyphens)
         print("starting main NOW...")
-        print("================================>>>>>")
+        print(hyphens)
         import main
 else:
     gc.collect()
-    print("================================>>>>>")
+    print(hyphens)
     print("update SKIPPED, 5 seconds pause...")
     time.sleep(5)
-    print("================================>>>>>")
+    print(hyphens)
     print("starting main NOW...")
-    print("================================>>>>>")
+    print(hyphens)
     
     import main
