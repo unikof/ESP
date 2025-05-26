@@ -63,6 +63,5 @@ else:
     time.sleep(5)
     print(hyphens)
     print("starting main NOW...")
-    print(hyphens)
     
     import main
