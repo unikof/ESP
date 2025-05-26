@@ -1,11 +1,14 @@
 import network
 import espnow
 from time import sleep, sleep_ms, ticks_ms, ticks_diff
-from addr import zal_light
+from addr import zal_light, get_espnow_mac
+import machine
 
 hyphens = "=" * 40 + ">>>"
 #===================================================================
-print(f"{hyphens}     ZAL WALL   ")
+print(f"{hyphens}")
+print("              ZAL WALL")
+print(f"{hyphens}")
 #===================================================================
 def send_mess(msg):
     for x in range(5):
@@ -24,7 +27,7 @@ def wait_for_response():
             return msg.decode()
     return "TIME_OUT"
 #===================================================================
-#print("current MAC: ", addr.get_espnow_mac())
+print("current MAC: ", get_espnow_mac())
 print("standing up WLAN...")
 
 wlan = network.WLAN(network.STA_IF)
@@ -38,28 +41,21 @@ esp.add_peer(zal_light)
 print("listening butts...:")
 print(hyphens)
    
-send_mess("aaaaa")
+send_mess("telik_click")
 sleep(1)
-send_mess("bbbb")
+send_mess("telik_click")
+sleep(1)
+send_mess("telik_click")
+sleep(1)
+send_mess("telik_click")
+sleep(1)
+send_mess("telik_click")
+sleep(1)
+send_mess("telik_click")
+sleep(1)
 
-sleep(1)
-send_mess("zzz")
-
-sleep(1)
-send_mess("fff")
-
-sleep(1)
-send_mess("ggg")
-
-sleep(1)
-send_mess("hhh")
-
-sleep(1)
-send_mess("jjj")
-
-sleep(1)
-send_mess("kkk")
 
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
+

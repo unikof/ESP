@@ -2,7 +2,7 @@ import machine
 import network
 import espnow
 from time import sleep, sleep_ms
-from addr import zal_wall
+from addr import zal_wall, get_espnow_mac
 
 hyphens = "=" * 40 + ">>>"
 #===================================================================
@@ -62,7 +62,7 @@ def control_dag(code):
     return response
 
 #===================================================================
-#print("current MAC: ", addr.get_espnow_mac())
+print("current MAC: ", get_espnow_mac())
 print("standing up WLAN...")
 
 wlan = network.WLAN(network.STA_IF)
@@ -109,5 +109,6 @@ while True:
         divan_led.duty(duty)
         sleep_ms(500)
 """
+
 
 
