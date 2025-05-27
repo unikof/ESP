@@ -7,9 +7,12 @@ from addr import zal_wall, get_espnow_mac
 hyphens = "=" * 40 + ">>>"
 #===================================================================
 #Led control
-floor_led = machine.PWM(machine.Pin(18), freq=10000)
+floor_led = machine.PWM(machine.Pin(21), freq=10000)
 telik_led = machine.PWM(machine.Pin(19), freq=10000)
-divan_led = machine.PWM(machine.Pin(21), freq=10000)
+divan_led = machine.PWM(machine.Pin(18), freq=10000)
+#===================================================================
+#Mandatory sleep and get them off...
+sleep_ms(10)
 
 floor_led.duty(0)
 telik_led.duty(0)
@@ -24,6 +27,32 @@ print(f"{hyphens}")
 print("              ZAL LIGHT")
 print(f"{hyphens}")
 #===================================================================
+"""
+while True:
+    floor_led.duty(1023)
+    print("floor_led_on")
+    sleep(1)
+    floor_led.duty(0)
+    print("floor_led_off")
+    sleep(1)
+
+    telik_led.duty(1023)
+    print("telik_led_on")
+    sleep(1)
+    telik_led.duty(0)
+    print("telik_led_off")
+    sleep(1)
+    
+    divan_led.duty(1023)
+    print("divan_led_on")
+    sleep(1)
+    divan_led.duty(0)
+    print("divan_led_off")
+    sleep(1)
+    
+    print(hyphens)
+"""
+
 def control_dag(code):
     global floor_status, telik_status, divan_status
     response = ""
@@ -92,23 +121,3 @@ while True:
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
-"""
-while True:
-    telik_led.duty(1023)
-    sleep_ms(1000)
-    telik_led.duty(0)
-    sleep_ms(1000)       
-
-
-
-while True:
-    for duty in range(30, 100, 3):
-        print(duty)
-        floor_led.duty(duty)
-        telik_led.duty(duty)
-        divan_led.duty(duty)
-        sleep_ms(500)
-"""
-
-
-
