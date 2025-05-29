@@ -15,6 +15,12 @@ print(f"{hyphens}")
 
 reboot_factor = 0
 #===================================================================
+def device_reboot():
+    print(hyphens)
+    print("reboot..")
+    send_mess("reboot")
+    machine.reset()
+
 def send_mess(msg):
     for x in range(5):
         esp.send(zal_light, msg)
@@ -43,7 +49,6 @@ def on_click(button_number):
         send_mess("divan_click")
         
     reboot_factor = 0
-    
     sleep_ms(500)
 
 def on_long_press(button_number):
@@ -53,10 +58,7 @@ def on_long_press(button_number):
         send_mess("floor_long_press")
         reboot_factor +=1
         if reboot_factor > 10:
-            print(hyphens)
-            print("reboot..")
-            send_mess("reboot")
-            machine.reset()
+            device_reboot()
         
     if button_number == 2:
         send_mess("telik_long_press")
