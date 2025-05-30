@@ -1,11 +1,18 @@
 import time
+import ntptime
+import machine
 
-hyphens = "=" * 30 + ">>>"
+hyphens = "=" * 40 + ">>>"
 
 print(hyphens)
 print("...BOOT STARTED...")
 
-do_update = False
+do_update = True
+
+print(hyphens)
+print("5 seconds pause for cancelling...")
+time.sleep(5)
+print(hyphens)
 
 if(do_update):
     print("update activated...")
@@ -28,18 +35,18 @@ if(do_update):
         time.sleep(1)
 
     print("WiFi OK, network config:", wifi.ifconfig())
+    print(hyphens)
 
-    time.sleep(1)
-
-    GD_URL = "https://raw.githubusercontent.com/unikof/ESP/refs/heads/main/Hata/detsk/remote_door/main.py"
+    time.sleep(3)
 
     try:
         print("downloading new_main.py...")
-        response = urequests.get(GD_URL)
+        response = urequests.get("https://raw.githubusercontent.com/unikof/ESP/main/hata_2_0/zal/wall/main.py")
         if response.status_code == 200:
+            print("response_status: 200")
             with open("main.py", "w") as f:
                 f.write(response.text)
-            print("UPDATE SUCCESS.....")
+            print("UPDATE MAIN SUCCESS.....")
             print(hyphens)
         else:
             print("downloading failed, status:", response.status_code)
@@ -47,21 +54,43 @@ if(do_update):
     except Exception as e:
         print("Error:", e)
         print(hyphens)
+        
+    try:
+        print("downloading new_addr.py...")
+        response = urequests.get("https://raw.githubusercontent.com/unikof/ESP/main/hata_2_0/addr.py")
+        if response.status_code == 200:
+            print("response_status: 200")
+            with open("addr.py", "w") as f:
+                f.write(response.text)
+            print("UPDATE ADDR SUCCESS.....")
+            print(hyphens)
+        else:
+            print("downloading failed, status:", response.status_code)
+        response.close()
+    except Exception as e:
+        print("Error:", e)
+        print(hyphens)
+        
+    try:        
+        ntptime.host = "pool.ntp.org"
+        ntptime.settime()
+        print("NTP time sync OK")
+    except Exception as e:
+        print("Error:", e)
+        print(hyphens)
+        
     finally:
         gc.collect()
-        print(hyphens)
-        print("5 seconds pause...")
-        time.sleep(5)
-        print(hyphens)
-        print("starting main NOW...")
-        print(hyphens)
+        print("starting main NOW..........")
         import main
 else:
     gc.collect()
     print(hyphens)
-    print("update SKIPPED, 5 seconds pause...")
-    time.sleep(5)
+    print("update SKIPPED...")
     print(hyphens)
-    print("starting main NOW...")
+    print("starting main NOW..........")
     
     import main
+
+
+
