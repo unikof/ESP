@@ -53,6 +53,25 @@ while True:
     print(hyphens)
 """
 
+def device_reboot():
+    device_reboot()
+    divan_led.duty(0)
+    sleep_ms(300)
+    divan_led.duty(1023)
+    sleep_ms(300)
+    divan_led.duty(0)
+    sleep_ms(300)
+    divan_led.duty(1023)
+    sleep_ms(300)
+    divan_led.duty(0)
+    sleep_ms(300)
+    divan_led.duty(1023)
+    sleep_ms(300)
+    divan_led.duty(0)
+    print("rebooting system...")
+    
+    machine.reset()
+
 def control_dag(code):
     global floor_status, telik_status, divan_status
     response = ""
@@ -85,7 +104,7 @@ def control_dag(code):
         response = f"response_{code}"
     
     elif code == "reboot":
-        machine.reset()
+        device_reboot()
     
     else:        
         response = f"unknown_command_{code}"
