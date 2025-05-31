@@ -27,37 +27,37 @@ if do_update:
       
         try:
             print("downloading new_main.py...")
-            response = urequests.get("https://raw.githubusercontent.com/unikof/ESP/main/hata_2_0/zal/wall/main.py") #PERSONAL FOR EACH
-        if response.status_code == 200:
-            print("response_status: 200")
-            with open("main.py", "w") as f:
-                f.write(response.text)
-            print("UPDATE MAIN SUCCESS.....")
+            response = urequests.get("https://raw.githubusercontent.com/unikof/ESP/main/hata_2_0/zal/wall/main.py")
+            if response.status_code == 200:
+                print("response_status: 200")
+                with open("main.py", "w") as f:
+                    f.write(response.text)
+                print("UPDATE MAIN SUCCESS.....")
+                print(hyphens)
+            else:
+                print("downloading failed, status:", response.status_code)
+            response.close()
+        except Exception as e:
+            print("Error:", e)
             print(hyphens)
-        else:
-            print("downloading failed, status:", response.status_code)
-        response.close()
-    except Exception as e:
-        print("Error:", e)
-        print(hyphens)
-        
-    try:
-        print("downloading new_addr.py...")
-        response = urequests.get("https://raw.githubusercontent.com/unikof/ESP/main/hata_2_0/addr.py")
-        if response.status_code == 200:
-            print("response_status: 200")
-            with open("addr.py", "w") as f:
-                f.write(response.text)
-            print("UPDATE ADDR SUCCESS.....")
+            
+        try:
+            print("downloading new_addr.py...")
+            response = urequests.get("https://raw.githubusercontent.com/unikof/ESP/main/hata_2_0/addr.py")
+            if response.status_code == 200:
+                print("response_status: 200")
+                with open("addr.py", "w") as f:
+                    f.write(response.text)
+                print("UPDATE ADDR SUCCESS.....")
+                print(hyphens)
+            else:
+                print("downloading failed, status:", response.status_code)
+            response.close()
+        except Exception as e:
+            print("Error:", e)
             print(hyphens)
-        else:
-            print("downloading failed, status:", response.status_code)
-        response.close()
-    except Exception as e:
-        print("Error:", e)
-        print(hyphens)
-        
-    try:        
+            
+        try:
             print("downloading new_addr.py...")
             response = urequests.get("https://raw.githubusercontent.com/unikof/ESP/main/hata_2_0/func.py")
             if response.status_code == 200:
