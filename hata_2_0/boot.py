@@ -26,7 +26,7 @@ if do_update:
         print(hyphens)
       
         try:
-            print("downloading new_main.py...")
+            print("downloading new main.py...")
             response = urequests.get("https://raw.githubusercontent.com/unikof/ESP/main/hata_2_0/zal/wall/main.py")
             if response.status_code == 200:
                 print("response_status: 200")
@@ -42,7 +42,7 @@ if do_update:
             print(hyphens)
             
         try:
-            print("downloading new_addr.py...")
+            print("downloading new addr.py...")
             response = urequests.get("https://raw.githubusercontent.com/unikof/ESP/main/hata_2_0/addr.py")
             if response.status_code == 200:
                 print("response_status: 200")
@@ -58,7 +58,7 @@ if do_update:
             print(hyphens)
             
         try:
-            print("downloading new_addr.py...")
+            print("downloading new func.py...")
             response = urequests.get("https://raw.githubusercontent.com/unikof/ESP/main/hata_2_0/func.py")
             if response.status_code == 200:
                 print("response_status: 200")
