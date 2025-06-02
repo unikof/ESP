@@ -62,10 +62,10 @@ def on_long_press(button_name):
         if reboot_factor > 5:
             device_reboot()
         
-    if button_name == "telik":
-        send_mess("telik_long_press")s
+    elif button_name == "telik":
+        send_mess("telik_long_press")
         
-    if button_name == "divan":
+    elif button_name == "divan":
         send_mess("divan_long_press")
         
 def button_pressed(button_name):
@@ -134,6 +134,7 @@ while True:
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
+
 
 
 
