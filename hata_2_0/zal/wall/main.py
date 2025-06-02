@@ -45,9 +45,9 @@ def on_click(button_name):
     
     if button_name == "floor":
         send_mess("floor_click")
-    if button_name == "telik":
+    elif button_name == "telik":
         send_mess("telik_click")
-    if button_name == "divan":
+    elif button_name == "divan":
         send_mess("divan_click")
         
     reboot_factor = 0
