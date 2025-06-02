@@ -59,11 +59,11 @@ def on_long_press(button_name):
         send_mess("floor_long_press")
         reboot_factor += 1
         #print(reboot_factor)
-        if reboot_factor > 10:
+        if reboot_factor > 5:
             device_reboot()
         
     if button_name == "telik":
-        send_mess("telik_long_press")
+        send_mess("telik_long_press")s
         
     if button_name == "divan":
         send_mess("divan_long_press")
