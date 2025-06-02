@@ -143,23 +143,3 @@ while True:
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
-"""
-while True:
-    telik_led.duty(1023)
-    sleep_ms(1000)
-    telik_led.duty(0)
-    sleep_ms(1000)       
-
-
-
-while True:
-    for duty in range(30, 100, 3):
-        print(duty)
-        floor_led.duty(duty)
-        telik_led.duty(duty)
-        divan_led.duty(duty)
-        sleep_ms(500)
-"""
-
-
-
