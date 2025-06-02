@@ -21,7 +21,7 @@ def device_reboot():
     send_mess("reboot")
     machine.reset()
 
-def send_mess(msg):
+def send_mess(msg):    
     for x in range(5):
         esp.send(zal_light, msg)
         print(f"request ===>>> {msg}")
@@ -49,7 +49,8 @@ def on_click(button_number):
         send_mess("divan_click")
         
     reboot_factor = 0
-    sleep_ms(500)
+    
+    sleep_ms(100)
 
 def on_long_press(button_number):
     global reboot_factor
@@ -66,34 +67,33 @@ def on_long_press(button_number):
     if button_number == 3:
         send_mess("divan_long_press")
     
-    sleep_ms(1000)
+    sleep_ms(500)
 
 def button_pressed(button):
-    if button.value() == 0:
-        return True
-    else:
-        return False
-
-def get_press_type(button, numb):
-    sleep_ms(50) #Tremor
     current_time = ticks_ms()
-    time_diff = 0
+    score = 0
+    
+    while ticks_diff(ticks_ms(), current_time) < 50:
+        if button.value() == 0:
+            score =+ 1
+    
+    if score == 0:
+        return False
+    else:
+        return True
+
+def press_control(button, numb):
+    current_time = ticks_ms()
     
     while True:
-        time_diff = ticks_diff(ticks_ms(), current_time)
-        if button_pressed(button_1) == False or time_diff >= 500:
-            if time_diff >= 500:
-                #print(time_diff)
-                on_long_press(numb)
-                current_time = 0
-                time_diff = 0
-                break
-            else:
-                #print(time_diff)
-                on_click(numb)
-                current_time = 0
-                time_diff = 0
-                break
+        if button_pressed(button_1) == False:
+            on_click(numb)
+            break
+        
+        elif ticks_diff(ticks_ms(), current_time) > 500:
+            on_long_press(numb)
+            sleep_ms(500)
+            break
 #===================================================================
 print("current MAC: ", get_espnow_mac())
 print("standing up WLAN...")
@@ -110,18 +110,19 @@ print("STARTED, listening butts...:")
 print(hyphens)
 
 while True:
-    if button_pressed(button_1) == True:
-        get_press_type(button_1, 1)
-    
-    if button_pressed(button_2) == True:
-        get_press_type(button_2, 2)
-    
-    if button_pressed(button_3) == True:
-        get_press_type(button_3, 3)
+    if button_1.value() == 0:
+        press_control(button_1, 1)
+        
+    if button_2.value() == 0:
+        press_control(button_2, 2)
+        
+    if button_3.value() == 0:
+        press_control(button_3, 3)
 
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
+
 
 
 
