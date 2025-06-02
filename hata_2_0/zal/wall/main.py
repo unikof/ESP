@@ -22,8 +22,7 @@ def device_reboot():
     machine.reset()
 
 def send_mess(msg):
-    print(msg)
-    return
+    #print(msg);return
     
     for x in range(5):
         esp.send(zal_light, msg)
@@ -59,6 +58,7 @@ def on_long_press(button_name):
     if button_name == "floor":
         send_mess("floor_long_press")
         reboot_factor += 1
+        #print(reboot_factor)
         if reboot_factor > 10:
             device_reboot()
         
@@ -67,9 +67,7 @@ def on_long_press(button_name):
         
     if button_name == "divan":
         send_mess("divan_long_press")
-    
-    sleep_ms(500)
-
+        
 def button_pressed(button_name):
     current_time = ticks_ms()
     score = 0
@@ -98,15 +96,15 @@ def press_control(button_name):
     
     while True:
         if button_pressed(button_name) == False:
-            #on_click(button_name)
-            print(f"CLICK {button_name}")
+            on_click(button_name)
+            #print(f"CLICK {button_name}")
             sleep_ms(100)
             break
         
         elif ticks_diff(ticks_ms(), current_time) > 500:
-            #on_long_press(button_name)
-            print(f"LONG_PRESS {button_name}")
-            sleep_ms(500)
+            on_long_press(button_name)
+            #print(f"LONG_PRESS {button_name}")
+            sleep_ms(1000)
             break
 #===================================================================
 print("current MAC: ", get_espnow_mac())
