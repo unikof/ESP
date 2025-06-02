@@ -108,8 +108,7 @@ esp.add_peer(zal_light)
 
 print("STARTED, listening butts...:")
 print(hyphens)
-    
-   
+
 while True:
     if button_pressed(button_1) == True:
         get_press_type(button_1, 1)
@@ -119,17 +118,10 @@ while True:
     
     if button_pressed(button_3) == True:
         get_press_type(button_3, 3)
-        
-                    
-"""
-
-sleep(1)
-send_mess("telik_click")
-sleep(1)
-"""
 
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
+
 
 
