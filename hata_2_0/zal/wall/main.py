@@ -5,9 +5,9 @@ from addr import zal_light, get_espnow_mac
 import machine
 
 hyphens = "=" * 40 + ">>>"
-button_1 = machine.Pin(18, machine.Pin.IN, machine.Pin.PULL_UP)
-button_2 = machine.Pin(19, machine.Pin.IN, machine.Pin.PULL_UP)
-button_3 = machine.Pin(21, machine.Pin.IN, machine.Pin.PULL_UP)
+button_floor = machine.Pin(18, machine.Pin.IN, machine.Pin.PULL_UP)
+button_telik = machine.Pin(19, machine.Pin.IN, machine.Pin.PULL_UP)
+button_divan = machine.Pin(21, machine.Pin.IN, machine.Pin.PULL_UP)
 #===================================================================
 print(f"{hyphens}")
 print("              ZAL WALL")
@@ -21,7 +21,10 @@ def device_reboot():
     send_mess("reboot")
     machine.reset()
 
-def send_mess(msg):    
+def send_mess(msg):
+    print(msg)
+    return
+    
     for x in range(5):
         esp.send(zal_light, msg)
         print(f"request ===>>> {msg}")
@@ -38,60 +41,71 @@ def wait_for_response():
             return msg.decode()
     return "TIME_OUT"
 #===================================================================
-def on_click(button_number):
+def on_click(button_name):
     global reboot_factor
     
-    if button_number == 1:
+    if button_name == "floor":
         send_mess("floor_click")
-    if button_number == 2:
+    if button_name == "telik":
         send_mess("telik_click")
-    if button_number == 3:
+    if button_name == "divan":
         send_mess("divan_click")
         
     reboot_factor = 0
-    
-    sleep_ms(100)
 
-def on_long_press(button_number):
+def on_long_press(button_name):
     global reboot_factor
     
-    if button_number == 1:
+    if button_name == "floor":
         send_mess("floor_long_press")
-        reboot_factor +=1
+        reboot_factor += 1
         if reboot_factor > 10:
             device_reboot()
         
-    if button_number == 2:
+    if button_name == "telik":
         send_mess("telik_long_press")
         
-    if button_number == 3:
+    if button_name == "divan":
         send_mess("divan_long_press")
     
     sleep_ms(500)
 
-def button_pressed(button):
+def button_pressed(button_name):
     current_time = ticks_ms()
     score = 0
     
     while ticks_diff(ticks_ms(), current_time) < 50:
-        if button.value() == 0:
-            score =+ 1
-    
-    if score == 0:
+        if button_name == "floor":
+            if button_floor.value() == 0:
+                score += 1
+                
+        elif button_name == "telik":    
+            if button_telik.value() == 0:
+                score += 1
+                
+        elif button_name == "divan":    
+            if button_divan.value() == 0:
+                score += 1           
+
+    if score < 10:
         return False
     else:
+        #print(score)
         return True
-
-def press_control(button, numb):
+    
+def press_control(button_name):
     current_time = ticks_ms()
     
     while True:
-        if button_pressed(button_1) == False:
-            on_click(numb)
+        if button_pressed(button_name) == False:
+            #on_click(button_name)
+            print(f"CLICK {button_name}")
+            sleep_ms(100)
             break
         
         elif ticks_diff(ticks_ms(), current_time) > 500:
-            on_long_press(numb)
+            #on_long_press(button_name)
+            print(f"LONG_PRESS {button_name}")
             sleep_ms(500)
             break
 #===================================================================
@@ -110,14 +124,14 @@ print("STARTED, listening butts...:")
 print(hyphens)
 
 while True:
-    if button_1.value() == 0:
-        press_control(button_1, 1)
+    if button_floor.value() == 0:
+        press_control("floor")
         
-    if button_2.value() == 0:
-        press_control(button_2, 2)
+    elif button_telik.value() == 0:
+        press_control("telik")
         
-    if button_3.value() == 0:
-        press_control(button_3, 3)
+    elif button_divan.value() == 0:
+        press_control("divan")
 
 print(hyphens)
 print("MAIN END...")
