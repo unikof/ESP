@@ -115,13 +115,13 @@ def control_dag(code):
         response = f"response_{code}"
         
     elif code == "telik_long_press":
-        telik_led.duty(100)
+        telik_led.duty(45)
         telik_status = "half"
         
         response = f"response_{code}"
         
     elif code == "divan_long_press":
-        divan_led.duty(100)
+        divan_led.duty(45)
         divan_status = "half"
         
         response = f"response_{code}"
