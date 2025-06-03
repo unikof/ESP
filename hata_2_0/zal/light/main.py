@@ -102,6 +102,29 @@ def control_dag(code):
             divan_led.duty(0)
             divan_status = "off"
         response = f"response_{code}"
+        
+    elif code == "floor_long_press":
+        floor_led.duty(0)
+        telik_led.duty(0)
+        divan_led.duty(0)
+        
+        floor_status = "off"
+        telik_status = "off"
+        divan_status = "off"
+        
+        response = f"response_{code}"
+        
+    elif code == "telik_long_press":
+        telik_led.duty(100)
+        telik_status = "half"
+        
+        response = f"response_{code}"
+        
+    elif code == "divan_long_press":
+        divan_led.duty(100)
+        divan_status = "half"
+        
+        response = f"response_{code}"
     
     elif code == "reboot":
         device_reboot()
@@ -143,3 +166,4 @@ while True:
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
+
