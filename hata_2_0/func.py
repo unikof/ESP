@@ -8,7 +8,6 @@ def connect_wifi():
     
     ssid = "HP2_4"
     password = "harrypotter"
-    max_retries = 10
     wlan = network.WLAN(network.STA_IF)
     
     wlan.active(False)
@@ -35,7 +34,7 @@ def connect_wifi():
     print(hyphens)
     
     retries = 0
-    while retries < max_retries:
+    while retries < 10:
         status = wlan.status()
         if status == network.STAT_GOT_IP:
             print("CONNECTED !!!")
