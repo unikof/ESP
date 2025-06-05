@@ -17,8 +17,6 @@ time.sleep(5)
 
 if do_update and func.connect_wifi():
     print("update activated...")
-
-    print(hyphens)
   
     try:
         print("downloading new main.py...")
@@ -82,9 +80,7 @@ else:
     gc.collect()
     print(hyphens)
     print("update SKIPPED...")
-    print(hyphens)
     print("starting main NOW..........")
-    
     import main
 
 
