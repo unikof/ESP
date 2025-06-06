@@ -1,10 +1,12 @@
 import machine
 import network
 import espnow
-from time import sleep, sleep_ms
+from time import sleep, sleep_ms, ticks_ms, ticks_diff
 from addr import zal_wall, get_espnow_mac
+import gc
 
 hyphens = "=" * 40 + ">>>"
+ticks_check = ticks_ms()
 #===================================================================
 #Led control
 floor_led = machine.PWM(machine.Pin(21), freq=10000)
@@ -72,6 +74,8 @@ def device_reboot():
     machine.reset()
 
 def control_dag(code):
+    led = machine.Pin(2, machine.Pin.OUT)
+    
     global floor_status, telik_status, divan_status
     response = ""
     
@@ -157,11 +161,32 @@ while True:
         code = msg.decode()
         print(f"received <<<<=== {code}")
         response_code = control_dag(code)
-        sleep_ms(10)
+        sleep_ms(5)
         esp.send(destination, response_code)
         print(f"sent ===>>> {response_code}")
         print(hyphens)
+        print(gc.mem_free())
+        print(hyphens)
+    
+    if ticks_diff(ticks_ms(), ticks_check) > 3600000:
+        print("mem & espNow refresh....")
+        
+        gc.collect()
+        
+        esp.active(False)
+        wlan.active(False)
+        sleep_ms(5)
+        wlan.active(True)
+        esp.active(True)
+        esp.add_peer(destination)
+        
+        ticks_check = ticks_ms()
+        print(hyphens)
+    
 #===================================================================
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
+
+
+
