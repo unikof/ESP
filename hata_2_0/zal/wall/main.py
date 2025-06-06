@@ -6,6 +6,8 @@ import machine
 import gc
 
 hyphens = "=" * 40 + ">>>"
+ticks_check = ticks_ms()
+
 button_floor = machine.Pin(18, machine.Pin.IN, machine.Pin.PULL_UP)
 button_telik = machine.Pin(21, machine.Pin.IN, machine.Pin.PULL_UP)
 button_divan = machine.Pin(19, machine.Pin.IN, machine.Pin.PULL_UP)
