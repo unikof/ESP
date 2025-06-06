@@ -3,6 +3,7 @@ import espnow
 from time import sleep_ms, ticks_ms, ticks_diff
 from addr import zal_light, get_espnow_mac
 import machine
+import gc
 
 hyphens = "=" * 40 + ">>>"
 button_floor = machine.Pin(18, machine.Pin.IN, machine.Pin.PULL_UP)
@@ -130,6 +131,21 @@ while True:
         
     elif button_divan.value() == 0:
         press_control("divan")
+        
+    if ticks_diff(ticks_ms(), ticks_check) > 3600000:
+        print("mem & espNow refresh....")
+
+        gc.collect()
+
+        esp.active(False)
+        wlan.active(False)
+        sleep_ms(5)
+        wlan.active(True)
+        esp.active(True)
+        esp.add_peer(destination)
+
+        ticks_check = ticks_ms()
+        print(hyphens)
 
 print(hyphens)
 print("MAIN END...")
