@@ -161,7 +161,7 @@ while True:
         code = msg.decode()
         print(f"received <<<<=== {code}")
         response_code = control_dag(code)
-        sleep_ms(5)
+        sleep_ms(10)
         esp.send(destination, response_code)
         print(f"sent ===>>> {response_code}")
         print(hyphens)
@@ -175,7 +175,7 @@ while True:
         
         esp.active(False)
         wlan.active(False)
-        sleep_ms(5)
+        sleep_ms(10)
         wlan.active(True)
         esp.active(True)
         esp.add_peer(destination)
