@@ -54,7 +54,6 @@ while True:
 """
 
 def device_reboot():
-    device_reboot()
     divan_led.duty(0)
     sleep_ms(300)
     divan_led.duty(1023)
@@ -166,4 +165,3 @@ while True:
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
-
