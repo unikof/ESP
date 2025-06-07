@@ -73,9 +73,7 @@ def device_reboot():
     
     machine.reset()
 
-def control_dag(code):
-    led = machine.Pin(2, machine.Pin.OUT)
-    
+def control_dag(code):    
     global floor_status, telik_status, divan_status
     response = ""
     
