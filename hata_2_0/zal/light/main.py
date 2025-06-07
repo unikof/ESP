@@ -165,21 +165,19 @@ while True:
         esp.send(destination, response_code)
         print(f"sent ===>>> {response_code}")
         print(hyphens)
-        print(gc.mem_free())
-        print(hyphens)
     
     if ticks_diff(ticks_ms(), ticks_check) > 3600000:
         print("mem & espNow refresh....")
         
         gc.collect()
-        
+        """
         esp.active(False)
         wlan.active(False)
         sleep_ms(10)
         wlan.active(True)
         esp.active(True)
         esp.add_peer(destination)
-        
+        """
         ticks_check = ticks_ms()
         print(hyphens)
     
@@ -187,6 +185,7 @@ while True:
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
+
 
 
 
