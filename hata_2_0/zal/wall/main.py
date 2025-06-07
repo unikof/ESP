@@ -30,7 +30,7 @@ def device_reboot():
     
 def led_response():
     check_led.duty(1023)
-    sleep_ms(20)
+    sleep_ms(10)
     check_led.duty(0)
 
 def send_mess(msg):

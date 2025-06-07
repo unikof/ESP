@@ -12,6 +12,7 @@ ticks_check = ticks_ms()
 floor_led = machine.PWM(machine.Pin(21), freq=10000)
 telik_led = machine.PWM(machine.Pin(19), freq=10000)
 divan_led = machine.PWM(machine.Pin(18), freq=10000)
+check_led = machine.PWM(machine.Pin(2), freq=10000)
 #===================================================================
 #Mandatory sleep and get them off...
 sleep_ms(10)
@@ -19,6 +20,7 @@ sleep_ms(10)
 floor_led.duty(0)
 telik_led.duty(0)
 divan_led.duty(0)
+check_led.duty(0)
 #===================================================================
 # light statuses, can be: off / on / half
 floor_status = "off" 
@@ -87,6 +89,11 @@ def refresh_status():
         esp.add_peer(destination)
         ticks_check = ticks_ms()
         print(hyphens)
+        
+def led_response():
+    check_led.duty(1023)
+    sleep_ms(10)
+    check_led.duty(0)
 
 def control_dag(code):    
     global floor_status, telik_status, divan_status
@@ -148,7 +155,7 @@ def control_dag(code):
     else:        
         response = f"unknown_command_{code}"
     
-    print(f"statuses <floor/telik/divan> = <{floor_status}/{telik_status}/{divan_status}>")    
+    print(f"statuses <floor/telik/divan> = <{floor_status}/{telik_status}/{divan_status}>")
     return response
 
 #===================================================================
@@ -174,7 +181,7 @@ while True:
         code = msg.decode()
         print(f"received <<<<=== {code}")
         response_code = control_dag(code)
-        sleep_ms(10)
+        led_response()        
         esp.send(destination, response_code)
         print(f"sent ===>>> {response_code}")
         refresh_status()
@@ -184,8 +191,3 @@ while True:
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
-
-
-
-
-
