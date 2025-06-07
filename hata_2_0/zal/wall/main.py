@@ -13,6 +13,8 @@ button_telik = machine.Pin(21, machine.Pin.IN, machine.Pin.PULL_UP)
 button_divan = machine.Pin(19, machine.Pin.IN, machine.Pin.PULL_UP)
 
 check_led = machine.PWM(machine.Pin(2), freq=10000)
+sleep_ms(10)
+check_led.duty(0)
 #===================================================================
 print(f"{hyphens}")
 print("              ZAL WALL")
@@ -26,11 +28,10 @@ def device_reboot():
     send_mess("reboot")
     machine.reset()
     
-def check_led_on():
+def led_response():
     check_led.duty(1023)
-
-def check_led_off():
-    check_led.duty(0)    
+    sleep_ms(20)
+    check_led.duty(0)
 
 def send_mess(msg):
     for x in range(5):
@@ -39,6 +40,7 @@ def send_mess(msg):
         response = wait_for_response()
         print(f"response <<<=== {response} >>{x}th try<<<")
         if response != "TIME_OUT":
+            led_response()
             return
 
 def wait_for_response():
@@ -48,6 +50,21 @@ def wait_for_response():
             peer, msg = esp.recv()
             return msg.decode()
     return "TIME_OUT"
+#===================================================================
+def refresh_status():
+    global ticks_check
+    
+    if ticks_diff(ticks_ms(), ticks_check) > 60000000:
+        print("mem & espNow refresh....")
+        gc.collect()
+        esp.active(False)
+        wlan.active(False)
+        sleep_ms(5)
+        wlan.active(True)
+        esp.active(True)
+        esp.add_peer(destination)
+        ticks_check = ticks_ms()
+        print(hyphens)
 #===================================================================
 def on_click(button_name):
     global reboot_factor
@@ -107,17 +124,15 @@ def press_control(button_name):
         if button_pressed(button_name) == False:
             on_click(button_name)
             #print(f"CLICK {button_name}")
-            check_led_on()
             sleep_ms(100)
-            check_led_off()
+            refresh_status()
             break
         
         elif ticks_diff(ticks_ms(), current_time) > 500:
             on_long_press(button_name)
             #print(f"LONG_PRESS {button_name}")
-            check_led_on()
             sleep_ms(1000)
-            check_led_off()
+            refresh_status()
             break
 #===================================================================
 print("current MAC: ", get_espnow_mac())
@@ -143,21 +158,6 @@ while True:
         
     elif button_divan.value() == 0:
         press_control("divan")
-        
-    if ticks_diff(ticks_ms(), ticks_check) > 3600000:
-        print("mem & espNow refresh....")
-
-        gc.collect()
-        """
-        esp.active(False)
-        wlan.active(False)
-        sleep_ms(5)
-        wlan.active(True)
-        esp.active(True)
-        esp.add_peer(destination)
-        """
-        ticks_check = ticks_ms()
-        print(hyphens)
 
 print(hyphens)
 print("MAIN END...")
