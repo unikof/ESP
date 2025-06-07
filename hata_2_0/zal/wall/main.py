@@ -25,8 +25,6 @@ def device_reboot():
     machine.reset()
 
 def send_mess(msg):
-    #print(msg);return
-    
     for x in range(5):
         esp.send(zal_light, msg)
         print(f"request ===>>> {msg}")
@@ -138,20 +136,21 @@ while True:
         print("mem & espNow refresh....")
 
         gc.collect()
-
+        """
         esp.active(False)
         wlan.active(False)
         sleep_ms(5)
         wlan.active(True)
         esp.active(True)
         esp.add_peer(destination)
-
+        """
         ticks_check = ticks_ms()
         print(hyphens)
 
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
+
 
 
 
