@@ -6,7 +6,6 @@ import machine
 import gc
 
 hyphens = "=" * 40 + ">>>"
-ticks_check = ticks_ms()
 
 button_floor = machine.Pin(18, machine.Pin.IN, machine.Pin.PULL_UP)
 button_telik = machine.Pin(21, machine.Pin.IN, machine.Pin.PULL_UP)
@@ -21,6 +20,7 @@ print("              ZAL WALL")
 print(f"{hyphens}")
 
 reboot_factor = 0
+refresh_factor = 0
 #===================================================================
 def device_reboot():
     print(hyphens)
@@ -47,14 +47,17 @@ def wait_for_response():
     start_timing = ticks_ms()
     while ticks_diff(ticks_ms(), start_timing) < 100: # 100ms timeout
         if esp.any():
-            peer, msg = esp.recv()
+            peer, msg = esp.irecv()
             return msg.decode()
     return "TIME_OUT"
 #===================================================================
 def refresh_status():
-    global ticks_check
+    global refresh_factor
     
-    if ticks_diff(ticks_ms(), ticks_check) > 60000000:
+    refresh_factor += 1
+    
+    if refresh_factor > 90:
+        print(hyphens)
         print("mem & espNow refresh....")
         gc.collect()
         esp.active(False)
@@ -62,8 +65,8 @@ def refresh_status():
         sleep_ms(5)
         wlan.active(True)
         esp.active(True)
-        esp.add_peer(destination)
-        ticks_check = ticks_ms()
+        esp.add_peer(zal_light)
+        refresh_factor = 0
         print(hyphens)
 #===================================================================
 def on_click(button_name):

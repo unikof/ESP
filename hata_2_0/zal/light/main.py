@@ -6,7 +6,7 @@ from addr import zal_wall, get_espnow_mac
 import gc
 
 hyphens = "=" * 40 + ">>>"
-ticks_check = ticks_ms()
+refresh_factor = 0
 #===================================================================
 #Led control
 floor_led = machine.PWM(machine.Pin(21), freq=10000)
@@ -76,9 +76,12 @@ def device_reboot():
     machine.reset()
     
 def refresh_status():
-    global ticks_check
+    global refresh_factor
     
-    if ticks_diff(ticks_ms(), ticks_check) > 60000000:
+    refresh_factor += 1
+    
+    if refresh_factor > 110:
+        print(hyphens)
         print("mem & espNow refresh....")
         gc.collect()
         esp.active(False)
@@ -86,8 +89,8 @@ def refresh_status():
         sleep_ms(5)
         wlan.active(True)
         esp.active(True)
-        esp.add_peer(destination)
-        ticks_check = ticks_ms()
+        esp.add_peer(zal_wall)
+        refresh_factor = 0
         print(hyphens)
         
 def led_response():
