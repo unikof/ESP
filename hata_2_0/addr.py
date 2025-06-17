@@ -1,7 +1,7 @@
 import network
 
 zal_wall = b'\xC0\x5D\x89\xB0\x9C\xB8'
-zal_light = b'\xEC\xE3\x34\xB2\xE3\x44'
+zal_light = b'\x14\x33\x5C\x53\x65\xE0'
 
 def get_espnow_mac():
     wlan = network.WLAN(network.STA_IF)

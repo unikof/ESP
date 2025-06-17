@@ -5,15 +5,16 @@ import machine
 import urequests
 
 hyphens = "=" * 40 + ">>>"
-
+###########################################
+do_update = False  #########################
+###########################################
 print(hyphens)
-print("...BOOT STARTED...")
-
-do_update = True
-
-print(hyphens)
-print("5 seconds pause for cancelling...")
-time.sleep(5)
+print("starting after... 3")
+time.sleep(1)
+print("starting after... 2")
+time.sleep(1)
+print("starting after... 1")
+time.sleep(1)
 
 if do_update and func.connect_wifi():
     print("update activated...")
@@ -82,6 +83,7 @@ else:
     print("update SKIPPED...")
     print("starting main NOW..........")
     import main
+
 
 
 
