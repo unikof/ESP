@@ -79,6 +79,7 @@ def reboot_factor_control(val):
         print("reboot/update command received...")
         print(hyphens)
         rtc.memory(b'yes')
+        send_mess("reboot")
         machine.reset()
 #===================================================================
 def on_click(button_name):
