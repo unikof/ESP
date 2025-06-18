@@ -6,7 +6,7 @@ import urequests
 
 hyphens = "=" * 40 + ">>>"
 ###########################################
-do_update = False  #########################
+#rtc.memory(b'yes') # manual update
 ###########################################
 print(hyphens)
 print("starting after... 3")
@@ -16,12 +16,15 @@ time.sleep(1)
 print("starting after... 1")
 time.sleep(1)
 
-if do_update and func.connect_wifi():
+rtc = machine.RTC()
+do_update = rtc.memory()
+
+if do_update == b'yes' and func.connect_wifi():
     print("update activated...")
-  
+    
     try:
         print("downloading new main.py...")
-        response = urequests.get("https://raw.githubusercontent.com/unikof/ESP/main/hata_2_0/zal/light/main.py")
+        response = urequests.get("https://raw.githubusercontent.com/unikof/ESP/main/hata_2_0/zal/wall/main.py")
         if response.status_code == 200:
             print("response_status: 200")
             with open("main.py", "w") as f:
@@ -74,15 +77,16 @@ if do_update and func.connect_wifi():
         print("Error:", e)
         print(hyphens)
 
-    gc.collect()
-    print("starting main NOW..........")
-    import main
+    print("update COMPLETED...")
+    rtc.memory('no')
+    print("rebooting...")
+    machine.reset()
 else:
-    gc.collect()
     print(hyphens)
     print("update SKIPPED...")
-    print("starting main NOW..........")
+    print("starting main NOW...")
     import main
+
 
 
 
