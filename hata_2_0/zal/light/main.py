@@ -9,15 +9,18 @@ hyphens = "=" * 40 + ">>>"
 refresh_factor = 0
 #===================================================================
 #Led control
-floor_led = machine.PWM(machine.Pin(21), freq=10000)
-telik_led = machine.PWM(machine.Pin(19), freq=10000)
-divan_led = machine.PWM(machine.Pin(18), freq=10000)
-check_led = machine.PWM(machine.Pin(2), freq=10000)
+floor_led = machine.PWM(machine.Pin(21), freq = 10000)
+telik_led = machine.PWM(machine.Pin(19), freq = 10000)
+divan_led = machine.PWM(machine.Pin(18), freq = 10000)
+check_led = machine.PWM(machine.Pin(2),  freq = 10000)
 
 radio_1 = machine.Pin(25, machine.Pin.IN)
 radio_2 = machine.Pin(27, machine.Pin.IN)
 radio_3 = machine.Pin(14, machine.Pin.IN)
 radio_4 = machine.Pin(26, machine.Pin.IN)#, machine.Pin.PULL_UP)
+
+full_light_level = 1023
+half_light_level = 100
 #===================================================================
 #Mandatory sleep and get them off...
 sleep_ms(10)
@@ -60,21 +63,15 @@ while True:
     
     print(hyphens)
 """
-
+#===================================================================
 def device_reboot():
     divan_led.duty(0)
-    sleep_ms(300)
-    divan_led.duty(1023)
-    sleep_ms(300)
-    divan_led.duty(0)
-    sleep_ms(300)
-    divan_led.duty(1023)
-    sleep_ms(300)
-    divan_led.duty(0)
-    sleep_ms(300)
-    divan_led.duty(1023)
-    sleep_ms(300)
-    divan_led.duty(0)
+    int_led_response(300)
+    divan_led.duty(half_light_level)
+    int_led_response(300)
+    divan_led.duty(full_light_level)
+    int_led_response(300)
+    divan_led.duty(half_light_level)
     print("rebooting system...")
     
     machine.reset()
@@ -84,31 +81,31 @@ def refresh_status():
     
     refresh_factor += 1
     
-    if refresh_factor > 110:
+    if refresh_factor > 100:
         print(hyphens)
         print("mem & espNow refresh....")
         gc.collect()
         esp.active(False)
         wlan.active(False)
-        sleep_ms(5)
+        int_led_response(5)
         wlan.active(True)
         esp.active(True)
         esp.add_peer(zal_wall)
         refresh_factor = 0
         print(hyphens)
-        
-def led_response():
-    check_led.duty(1023)
-    sleep_ms(10)
+
+def int_led_response(ms):
+    check_led.duty(full_light_level)
+    sleep_ms(ms)
     check_led.duty(0)
     
 def show_statuses():
     print(f"statuses: ===>                                floor/telik/divan ===> {floor_status}/{telik_status}/{divan_status}")
-    
+#===================================================================
 def floor_dag():
     global floor_status
     if floor_status == "off":
-        floor_led.duty(1023)
+        floor_led.duty(full_light_level)
         floor_status = "on"
     else:
         floor_led.duty(0)
@@ -118,7 +115,7 @@ def floor_dag():
 def telik_dag():
     global telik_status
     if telik_status == "off":
-        telik_led.duty(1023)
+        telik_led.duty(full_light_level)
         telik_status = "on"
     else:
         telik_led.duty(0)
@@ -128,7 +125,7 @@ def telik_dag():
 def divan_dag():
     global divan_status
     if divan_status == "off":
-        divan_led.duty(1023)
+        divan_led.duty(full_light_level)
         divan_status = "on"
     else:
         divan_led.duty(0)
@@ -149,17 +146,17 @@ def floor_long_dag():
 
 def telik_long_dag():
     global telik_status
-    telik_led.duty(50)
+    telik_led.duty(half_light_level)
     telik_status = "half"
     show_statuses()
 
 def divan_long_dag():
     global divan_status
-    divan_led.duty(50)
+    divan_led.duty(half_light_level)
     divan_status = "half"
     show_statuses()
-        
-def control_dag(code):    
+#===================================================================
+def esp_now_mess_received(code):    
     response = ""
     
     if code == "floor_click":
@@ -216,13 +213,13 @@ while True:
     if esp.any():
         peer, msg = esp.recv()
         code = msg.decode()
-        print(f"received <<<<=== {code}")
-        response_code = control_dag(code)
-        led_response()        
+        #print(f"received <<<<=== {code}")
+        response_code = esp_now_mess_received(code)
+        int_led_response(10)
         esp.send(destination, response_code)
-        print(f"sent ===>>> {response_code}")
+        #print(f"sent ===>>> {response_code}")
         refresh_status()
-        print(hyphens)
+        #print(hyphens)
         
     #print(radio_1.value())
     #print(radio_2.value())
@@ -231,19 +228,17 @@ while True:
     
     elif radio_1.value() == 1:
         floor_dag()
-        sleep_ms(200)
+        int_led_response(200)
         
     elif radio_2.value() == 1:
         telik_dag()
-        sleep_ms(200)
+        int_led_response(200)
         
     elif radio_3.value() == 1:
         divan_dag()
-        sleep_ms(200)
+        int_led_response(200)
     
-    elif radio_4.value() == 1:
-        pass
-    
+    #elif radio_4.value() == 1:    
 #===================================================================
 print(hyphens)
 print("MAIN END...")
