@@ -25,7 +25,7 @@ print(f"{hyphens}")
 reboot_factor = 0
 refresh_factor = 0
 #===================================================================
-def int_led_response(ms):
+def led_sleep(ms):
     check_led.duty(1023)
     sleep_ms(ms)
     check_led.duty(0)
@@ -37,7 +37,7 @@ def send_mess(msg):
         response = wait_for_response()
         print(f"response <<<=== {response} >>{x}th try<<<")
         if response != "TIME_OUT":
-            int_led_response(10)
+            led_sleep(10)
             return
 
 def wait_for_response():
@@ -59,7 +59,7 @@ def refresh_status():
         gc.collect()
         esp.active(False)
         wlan.active(False)
-        int_led_response(5)
+        led_sleep(5)
         wlan.active(True)
         esp.active(True)
         esp.add_peer(zal_light)

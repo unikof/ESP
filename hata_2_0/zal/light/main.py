@@ -24,7 +24,7 @@ half_light_level = 100
 #===================================================================
 #Mandatory sleep and get them off...
 sleep_ms(10)
-
+rtc = machine.RTC()
 floor_led.duty(0)
 telik_led.duty(0)
 divan_led.duty(0)
@@ -65,15 +65,14 @@ while True:
 """
 #===================================================================
 def device_reboot():
-    divan_led.duty(0)
-    int_led_response(300)
-    divan_led.duty(half_light_level)
-    int_led_response(300)
-    divan_led.duty(full_light_level)
-    int_led_response(300)
-    divan_led.duty(half_light_level)
+    for _ in range(5):
+        floor_led.duty(half_light_level)
+        led_sleep(300)
+        floor_led.duty(0)
+        led_sleep(300)
+        
     print("rebooting system...")
-    
+    rtc.memory(b'yes')
     machine.reset()
     
 def refresh_status():
@@ -87,14 +86,14 @@ def refresh_status():
         gc.collect()
         esp.active(False)
         wlan.active(False)
-        int_led_response(5)
+        led_sleep(5)
         wlan.active(True)
         esp.active(True)
         esp.add_peer(zal_wall)
         refresh_factor = 0
         print(hyphens)
 
-def int_led_response(ms):
+def led_sleep(ms):
     check_led.duty(full_light_level)
     sleep_ms(ms)
     check_led.duty(0)
@@ -215,11 +214,11 @@ while True:
         code = msg.decode()
         #print(f"received <<<<=== {code}")
         response_code = esp_now_mess_received(code)
-        int_led_response(10)
+        led_sleep(10)
         esp.send(destination, response_code)
         #print(f"sent ===>>> {response_code}")
         refresh_status()
-        #print(hyphens)
+        print(hyphens)
         
     #print(radio_1.value())
     #print(radio_2.value())
@@ -228,19 +227,20 @@ while True:
     
     elif radio_1.value() == 1:
         floor_dag()
-        int_led_response(200)
+        led_sleep(200)
         
     elif radio_2.value() == 1:
         telik_dag()
-        int_led_response(200)
+        led_sleep(200)
         
     elif radio_3.value() == 1:
         divan_dag()
-        int_led_response(200)
+        led_sleep(200)
     
     #elif radio_4.value() == 1:    
 #===================================================================
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
+
 
