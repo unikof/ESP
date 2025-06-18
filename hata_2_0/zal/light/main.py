@@ -14,10 +14,10 @@ telik_led = machine.PWM(machine.Pin(19), freq=10000)
 divan_led = machine.PWM(machine.Pin(18), freq=10000)
 check_led = machine.PWM(machine.Pin(2), freq=10000)
 
-radio_1 = machine.Pin(14, machine.Pin.IN)
+radio_1 = machine.Pin(25, machine.Pin.IN)
 radio_2 = machine.Pin(27, machine.Pin.IN)
-radio_3 = machine.Pin(26, machine.Pin.IN)
-radio_4 = machine.Pin(25, machine.Pin.IN)#, machine.Pin.PULL_UP)
+radio_3 = machine.Pin(14, machine.Pin.IN)
+radio_4 = machine.Pin(26, machine.Pin.IN)#, machine.Pin.PULL_UP)
 #===================================================================
 #Mandatory sleep and get them off...
 sleep_ms(10)
@@ -103,7 +103,7 @@ def led_response():
     check_led.duty(0)
     
 def show_statuses():
-    print(f"statuses: ===>                    {floor_status}/{telik_status}/{divan_status}") #floor ==> {floor_status} telik ==> {telik_status} divan ==> {divan_status}")
+    print(f"statuses: ===>                                floor/telik/divan ===> {floor_status}/{telik_status}/{divan_status}")
     
 def floor_dag():
     global floor_status
@@ -149,13 +149,13 @@ def floor_long_dag():
 
 def telik_long_dag():
     global telik_status
-    telik_led.duty(45)
+    telik_led.duty(50)
     telik_status = "half"
     show_statuses()
 
 def divan_long_dag():
     global divan_status
-    divan_led.duty(45)
+    divan_led.duty(50)
     divan_status = "half"
     show_statuses()
         
