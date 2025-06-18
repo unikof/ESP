@@ -4,9 +4,11 @@ from time import sleep_ms, ticks_ms, ticks_diff
 from addr import zal_light, get_espnow_mac
 import machine
 import gc
-
+#===================================================================
 hyphens = "=" * 40 + ">>>"
-
+#===================================================================
+firmware_version = 3.18
+#===================================================================
 button_floor = machine.Pin(18, machine.Pin.IN, machine.Pin.PULL_UP)
 button_telik = machine.Pin(21, machine.Pin.IN, machine.Pin.PULL_UP)
 button_divan = machine.Pin(19, machine.Pin.IN, machine.Pin.PULL_UP)
@@ -14,6 +16,7 @@ button_divan = machine.Pin(19, machine.Pin.IN, machine.Pin.PULL_UP)
 check_led = machine.PWM(machine.Pin(2), freq=10000)
 sleep_ms(10)
 check_led.duty(0)
+rtc = machine.RTC()
 #===================================================================
 print(f"{hyphens}")
 print("              ZAL WALL")
@@ -73,9 +76,9 @@ def reboot_factor_control(val):
 
     if reboot_factor > 5:
         print(hyphens)
-        print("reboot command received..")
+        print("update command received, rebooting...")
         print(hyphens)
-        send_mess("reboot")
+        rtc.memory(b'yes')
         machine.reset()
         
 #===================================================================
@@ -168,6 +171,7 @@ while True:
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
+
 
 
 
