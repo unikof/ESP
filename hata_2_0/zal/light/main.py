@@ -20,7 +20,7 @@ radio_3 = machine.Pin(14, machine.Pin.IN)
 radio_4 = machine.Pin(26, machine.Pin.IN)#, machine.Pin.PULL_UP)
 
 full_light_level = 1023
-half_light_level = 20
+half_light_level = 2
 #===================================================================
 #Mandatory sleep and get them off...
 sleep_ms(10)
