@@ -6,7 +6,7 @@ import urequests
 
 hyphens = "=" * 40 + ">>>"
 ###########################################
-#rtc.memory(b'yes') # manual update
+#rtc.memory(b'yes') # manual update #######
 ###########################################
 print(hyphens)
 print("starting after... 3")

@@ -13,7 +13,7 @@ button_floor = machine.Pin(18, machine.Pin.IN, machine.Pin.PULL_UP)
 button_telik = machine.Pin(21, machine.Pin.IN, machine.Pin.PULL_UP)
 button_divan = machine.Pin(19, machine.Pin.IN, machine.Pin.PULL_UP)
 #===================================================================
-check_led = machine.PWM(machine.Pin(2), freq=10000)
+check_led = machine.PWM(machine.Pin(2), freq = 10000)
 sleep_ms(10)
 check_led.duty(0)
 rtc = machine.RTC()
@@ -76,11 +76,10 @@ def reboot_factor_control(val):
 
     if reboot_factor > 5:
         print(hyphens)
-        print("update command received, rebooting...")
+        print("reboot/update command received...")
         print(hyphens)
         rtc.memory(b'yes')
         machine.reset()
-        
 #===================================================================
 def on_click(button_name):
     if button_name == "floor":
@@ -171,6 +170,7 @@ while True:
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
+
 
 
 
