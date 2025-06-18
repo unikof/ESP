@@ -10,7 +10,7 @@ hyphens = "=" * 40 + ">>>"
 button_floor = machine.Pin(18, machine.Pin.IN, machine.Pin.PULL_UP)
 button_telik = machine.Pin(21, machine.Pin.IN, machine.Pin.PULL_UP)
 button_divan = machine.Pin(19, machine.Pin.IN, machine.Pin.PULL_UP)
-
+#===================================================================
 check_led = machine.PWM(machine.Pin(2), freq=10000)
 sleep_ms(10)
 check_led.duty(0)
@@ -22,17 +22,11 @@ print(f"{hyphens}")
 reboot_factor = 0
 refresh_factor = 0
 #===================================================================
-def device_reboot():
-    print(hyphens)
-    print("reboot..")
-    send_mess("reboot")
-    machine.reset()
-    
-def led_response():
+def int_led_response(ms):
     check_led.duty(1023)
-    sleep_ms(10)
+    sleep_ms(ms)
     check_led.duty(0)
-
+#===================================================================
 def send_mess(msg):
     for x in range(5):
         esp.send(zal_light, msg)
@@ -40,7 +34,7 @@ def send_mess(msg):
         response = wait_for_response()
         print(f"response <<<=== {response} >>{x}th try<<<")
         if response != "TIME_OUT":
-            led_response()
+            int_led_response(10)
             return
 
 def wait_for_response():
@@ -62,16 +56,30 @@ def refresh_status():
         gc.collect()
         esp.active(False)
         wlan.active(False)
-        sleep_ms(5)
+        int_led_response(5)
         wlan.active(True)
         esp.active(True)
         esp.add_peer(zal_light)
         refresh_factor = 0
         print(hyphens)
 #===================================================================
-def on_click(button_name):
+def reboot_factor_control(val):
     global reboot_factor
     
+    if val == 0:
+        reboot_factor = 0
+    elif val == 1:
+        reboot_factor += 1
+
+    if reboot_factor > 5:
+        print(hyphens)
+        print("reboot command received..")
+        print(hyphens)
+        send_mess("reboot")
+        machine.reset()
+        
+#===================================================================
+def on_click(button_name):
     if button_name == "floor":
         send_mess("floor_click")
     elif button_name == "telik":
@@ -79,17 +87,12 @@ def on_click(button_name):
     elif button_name == "divan":
         send_mess("divan_click")
         
-    reboot_factor = 0
+    reboot_factor_control(0)
 
 def on_long_press(button_name):
-    global reboot_factor
-    
     if button_name == "floor":
         send_mess("floor_long_press")
-        reboot_factor += 1
-        #print(reboot_factor)
-        if reboot_factor > 5:
-            device_reboot()
+        reboot_factor_control(1)
         
     elif button_name == "telik":
         send_mess("telik_long_press")
@@ -165,6 +168,7 @@ while True:
 print(hyphens)
 print("MAIN END...")
 print(hyphens)
+
 
 
 
