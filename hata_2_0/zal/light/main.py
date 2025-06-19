@@ -15,12 +15,12 @@ divan_led = machine.PWM(machine.Pin(18), freq = 10000)
 check_led = machine.PWM(machine.Pin(2),  freq = 10000)
 
 radio_1 = machine.Pin(25, machine.Pin.IN)
-radio_2 = machine.Pin(27, machine.Pin.IN)
-radio_3 = machine.Pin(14, machine.Pin.IN)
+radio_2 = machine.Pin(14, machine.Pin.IN)
+radio_3 = machine.Pin(27, machine.Pin.IN)
 radio_4 = machine.Pin(26, machine.Pin.IN)#, machine.Pin.PULL_UP)
 
 full_light_level = 1023
-half_light_level = 100
+half_light_level = 150
 #===================================================================
 #Mandatory sleep and get them off...
 sleep_ms(10)
