@@ -140,7 +140,7 @@ def press_control(button_name):
         elif ticks_diff(ticks_ms(), current_time) > 500:
             on_long_press(button_name)
             #print(f"LONG_PRESS {button_name}")
-            sleep_ms(1000)
+            sleep_ms(500)
             refresh_status()
             break
 #===================================================================
